@@ -17,7 +17,7 @@ After conducting numerous benchmarks, the following result emerged: Training for
 
 - [Mini-batch Training](#mini-batch-training)
 - [Stochastic Gradient Descent](#stochastic-gradient-descent)
-- [Scalable Architecture](#scalable-architecture)
+- [From Scratch Concept](#from-scratch-concept)
 - [Modern C# Optimization](#modern-c-optimization)
 - [Parallel Execution](#parallel-execution)
 - [SIMD Support](#simd-support)
@@ -38,7 +38,11 @@ Let's understand the calculation cost of the training process of each example, w
 
 ## Stochastic Gradient Descent
 
-## Scalable Architecture
+To update the weights, we use an optimizer, in this case, stochastic gradient descent (SGD) with momentum. Each weight goes through the same process, after the delta value for each weight has been accumulated in a batch, the calculation is newWeight = weight + learningRate * delta. Delta multiplied by learningRate is only a very small part in the right direction, so we hope to get better results with each update step. The new delta is calculated as newDelta = delta * momentum, and contains some of the correction of the last delta. Although momentum and more sophisticated ideas are often used, there are also efforts to do without momentum, which is sometimes better. In addition, learning rate and momentum are decreased each epoch with a factor smaller than 1. 
+
+Even if SGD is not perfect, it often offers a very good compromise and is used here, another important point why the neural network is so fast.
+
+## From Scratch Concept
 
 ## Modern C# Optimization
 
