@@ -86,8 +86,11 @@ SIMD stands for Single Instruction Multiple Data and is a technique where a sing
   
 ## Layer-wise Propagation
   
-
-
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/ff_layer-wise.gif?raw=true">
+</p>  
+  
+This animation is not entirely accurate, as it explicitly shows the activation, which is obtained on the fly in the implementation. Additionally, the ReLU function remains exclusive for this task as it is the only function capable of deactivating neurons so far. It may not be obvious, but by iterating through the network in this way, we open up a number of advantages that come into play.  
 ## ReLU Pre-activation
 
 ## Backprop Probability Training
