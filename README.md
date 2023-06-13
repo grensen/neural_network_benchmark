@@ -12,20 +12,21 @@ The demo first checks if the dataset is located under the specified path on the 
 
 After conducting numerous benchmarks, the following result emerged: Training for 50 epochs with 60,000 examples, utilizing various optimization techniques, took less than 2 seconds on an AMD 5600X processor with 6 cores. Unlike training, where the results can vary, the test results remain consistent during parallel operations. Although the test accuracy of 98% is good, the test frames per second were even more interesting and exceeded 2.1 million. An unbelievably high value, and especially considering that my system is quite mid-range. An core count increased from 6 to 16 with newer CPU generations should easily calculate 3x faster in the same benchmark. Let's see how that became possible.
 
-## Neural Network Feature List
 
-- Mini-batch Training
-- Stochastic Gradient Descent
-- Scalable Architecture
-- Modern C# Optimization
-- Parallel Execution
-- SIMD Support
-- Layer-wise Propagation
-- ReLU Pre-activation
-- Backprop Probability Training
-- Layer-wise Gradients
-- One Loop Backprop
-- Cache Locality
+## [Neural Network Feature List](#neural-network-feature-list)
+
+- [Mini-batch Training](#mini-batch-training)
+- [Stochastic Gradient Descent](#stochastic-gradient-descent)
+- [Scalable Architecture](#scalable-architecture)
+- [Modern C# Optimization](#modern-c-optimization)
+- [Parallel Execution](#parallel-execution)
+- [SIMD Support](#simd-support)
+- [Layer-wise Propagation](#layer-wise-propagation)
+- [ReLU Pre-activation](#relu-pre-activation)
+- [Backprop Probability Training](#backprop-probability-training)
+- [Layer-wise Gradients](#layer-wise-gradients)
+- [One Loop Backprop](#one-loop-backprop)
+- [Cache Locality](#cache-locality)
 
 ## Mini-batch Training
 
@@ -35,8 +36,27 @@ We could update the weights now, but instead of directly modifying the weights, 
 
 Let's understand the calculation cost of the training process of each example, which consists of (FF: activations = 1) + (BP: gradients = 1 + deltas = 1) + (Update: SGD = 1). The total cost is approximately 4. It's important to grasp the cost with different batch sizes. For example, a batch size of 1 would have a cost of 4, as we update the weights after computing the gradients, which only would cost 3. With a batch size of 2, the cost would be 3.5. In the demo, a batch size of 800 is used, which is considered high. However, this high batch size reduces the overall cost while improving training efficiency. To learn more about the impact of the batch size and its results, you can check out this [repository](https://github.com/grensen/multi-core#batchsize-800-with-net-7) with different batch sizes.
 
+## Stochastic Gradient Descent
 
+## Scalable Architecture
 
+## Modern C# Optimization
+
+## Parallel Execution
+
+## SIMD Support
+
+## Layer-wise Propagation
+
+## ReLU Pre-activation
+
+## Backprop Probability Training
+
+## Layer-wise Gradients
+
+## One Loop Backprop
+
+## Cache Locality
 
 
 
