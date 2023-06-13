@@ -79,7 +79,8 @@ Parallel execution in that case means, that each available core in a CPU is assi
 <p align="center">
   <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/simd_locuza.png?raw=true">
 </p>
-[(Image credit: @Locuza_ via Twitter)](https://twitter.com/Locuza_/status/1454152714930331652/photo/2)
+[Image credit: @Locuza_ via Twitter](https://twitter.com/Locuza_/status/1454152714930331652/photo/2)
+
 
 SIMD stands for Single Instruction Multiple Data and is a technique where a single instruction is applied to multiple data simultaneously. Finding the figure was a bit challenging, but it beautifully illustrates the presence of SIMD units on each CPU core. These SIMD units can process a vector of 8 values in my case, or possibly a vector of only 4 values, depending on the specific CPU architecture. Probably the CPU you're running the demo on will also support SIMD, so it's standard for the benchmark. As far as I know, the vector class I use can also support future CPU generations that can handle larger vectors like 16 or 32. That would be pretty cool. However, there are different approaches to achieve what we want. The method I use is similar to a great example on [Stack Overflow from aepot](https://stackoverflow.com/questions/71627141/fastest-way-to-multiply-and-sum-add-two-arrays-dot-product-unaligned-surpris/72760499#72760499) that demonstrates how to utilize SIMD vectors as references without copying them. Code sorcery!?!? It is heavily used in the code!
   
