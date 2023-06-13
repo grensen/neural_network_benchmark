@@ -68,7 +68,7 @@ However, if anyone believes that C# is outdated, I invite them to build the demo
 
 ## Modern C# Optimization
 
-When it comes to modern C#, this article [Performance Improvements in .NET 7](https://devblogs.microsoft.com/dotnet/performance_improvements_in_net_7/) by Stephen Toub is the first place to look. Perhaps the most relevant new feature are <span> arrays, which are used everywhere in my code. Furthermore, there have been significant improvements in internal functions like Span1.CopyTo(Span2). 
+When it comes to modern C#, this article [Performance Improvements in .NET 7](https://devblogs.microsoft.com/dotnet/performance_improvements_in_net_7/) by Stephen Toub is the first place to look. Perhaps the most relevant new feature are Span arrays, which are used everywhere in my code. Furthermore, there have been significant improvements in internal functions like Span1.CopyTo(Span2). 
 
 ## Parallel Execution
 
