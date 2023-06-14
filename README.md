@@ -30,6 +30,11 @@ After conducting numerous benchmarks, the following result emerged: Training for
 
 ## Mini-batch Training
 
+
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/mini-batch.png?raw=true">
+</p>
+
 A pillar in the training process is the batch size. First an example is taken, then the forward propagation is executed, which calculates the activations of the output neurons for each layer in the neural network. Then the error is determined by output - target = error. Which forms our output gradients that can be multiplied by their weights to calculate the further gradients until all layers have been backpropagated. 
 
 We could update the weights now, but instead of directly modifying the weights, we follow a different strategy. We store each correction value in a delta array with the same length of the weights, enabling us to accumulate a batch of these correction values. This approach has been found to yield better results compared to the shortcut. However, before we can update the weights, we need to determine the batch size, which represents the number of examples processed together. Once we have a batch filled with these correction values, we can proceed to update the weights accordingly.
@@ -37,6 +42,11 @@ We could update the weights now, but instead of directly modifying the weights, 
 Let's understand the calculation cost of the training process of each example, which consists of (FF: activations = 1) + (BP: gradients = 1 + deltas = 1) + (Update: SGD = 1). The total cost is approximately 4. It's important to grasp the cost with different batch sizes. For example, a batch size of 1 would have a cost of 4, as we update the weights after computing the gradients, which only would cost 3. With a batch size of 2, the cost would be 3.5. In the demo, a batch size of 800 is used, which is considered high. However, this high batch size reduces the overall cost while improving training efficiency. To learn more about the impact of the batch size and its results, you can check out this [repository](https://github.com/grensen/multi-core#batchsize-800-with-net-7) with different batch sizes.
 
 ## Stochastic Gradient Descent
+
+
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/SGD.png?raw=true">
+</p>
 
 To update the weights, we use an optimizer, in this case, stochastic gradient descent (SGD) with momentum. Each weight goes through the same process, after the delta value for each weight has been accumulated in a batch, the calculation is newWeight = weight + learningRate * delta. Delta multiplied by learningRate is only a very small part in the right direction, so we hope to get better results with each update step. The new delta is calculated as newDelta = delta * momentum, and contains some of the correction of the last delta. Although momentum and more sophisticated ideas are often used, there are also efforts to do without momentum, which is sometimes better. In addition, learning rate and momentum are decreased each epoch with a factor smaller than 1. 
 
