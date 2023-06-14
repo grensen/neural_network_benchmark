@@ -32,7 +32,7 @@ After conducting numerous benchmarks, the following result emerged: Training for
 
 
 <p align="center">
-  <img src="https://github.com/grensen/how_to_build/raw/main/figures/mini-batch.png?raw=true">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/mini-batch.png?raw=true">
 </p>
 
 A pillar in the training process is the batch size. First an example is taken, then the forward propagation is executed, which calculates the activations of the output neurons for each layer in the neural network. Then the error is determined by output - target = error. Which forms our output gradients that can be multiplied by their weights to calculate the further gradients until all layers have been backpropagated. 
@@ -45,7 +45,7 @@ Let's understand the calculation cost of the training process of each example, w
 
 
 <p align="center">
-  <img src="https://github.com/grensen/how_to_build/raw/main/figures/SGD.png?raw=true">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/SGD.png?raw=true">
 </p>
 
 To update the weights, we use an optimizer, in this case, stochastic gradient descent (SGD) with momentum. Each weight goes through the same process, after the delta value for each weight has been accumulated in a batch, the calculation is newWeight = weight + learningRate * delta. Delta multiplied by learningRate is only a very small part in the right direction, so we hope to get better results with each update step. The new delta is calculated as newDelta = delta * momentum, and contains some of the correction of the last delta. Although momentum and more sophisticated ideas are often used, there are also efforts to do without momentum, which is sometimes better. In addition, learning rate and momentum are decreased each epoch with a factor smaller than 1. 
