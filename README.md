@@ -117,11 +117,93 @@ This animation is not entirely accurate, as it explicitly shows the activation, 
 
 ## Backprop Probability Training
 
+~~~cs
+static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
+{
+    Span<float> neurons = stackalloc float[NN.neuronLen];
+
+    int prediction = Eval(sample, neurons, NN.net, NN.weights);
+
+    Softmax(neurons.Slice(neurons.Length - NN.net[^1], NN.net[^1]));
+
+    if (neurons[NN.neuronLen - NN.net[^1] + target] < 0.99)
+        Backprop(NN.net, NN.weights, neurons, deltas, target);
+
+    return prediction == target;
+}
+~~~
+
 ## Layer-wise Gradients
+
+~~~cs
+    Span<float> outputGradients = stackalloc float[net[^1]]; // right
+~~~
 
 ## One Loop Backprop
 
+~~~cs
+static void Backprop(Span<int> net, Span<float> weights, Span<float> neurons, Span<float> deltas, int target)
+{  
+    // caution - input gradients are computed! (for CNN e.g.)
+    Span<float> outputGradients = stackalloc float[net[^1]]; // right
+
+    // output error gradients, hard target as 1 for its class
+    for (int r = neurons.Length - net[^1], p = 0; r < neurons.Length; r++, p++)
+        outputGradients[p] = target == p ? 1 - neurons[r] : -neurons[r];
+
+    // compute gradients and deltas for each layer in one loop, hot!!!
+    for (int j = neurons.Length - net[^1], k = neurons.Length, m = weights.Length, i = net.Length - 2; i >= 0; i--)
+    {
+        int right = net[i + 1], left = net[i];
+        k -= right; j -= left; m -= right * left;
+
+        Span<float> inputGradients = stackalloc float[left];
+        for (int l = 0, w = m; l < inputGradients.Length; l++, w += right)
+        {
+            var n = neurons[l + j];
+            if (n <= 0) continue;
+
+            var wts = weights.Slice(w, right);
+            var dts = deltas.Slice(w, right);
+
+            var wtsVec = MemoryMarshal.Cast<float, Vector<float>>(wts);
+            var dtsVec = MemoryMarshal.Cast<float, Vector<float>>(dts); 
+            var graVec = MemoryMarshal.Cast<float, Vector<float>>(outputGradients);
+
+            var sumVec = Vector<float>.Zero;
+
+            for (int v = 0; v < wtsVec.Length; v++) // SIMD, partial gradient and delta
+            {
+                var outGraVec = graVec[v];
+                sumVec = wtsVec[v] * outGraVec + sumVec;
+                dtsVec[v] = n * outGraVec + dtsVec[v];
+            }
+
+            // changed float result with Vector.Sum() vs. regular approach
+            float sum = Vector.Sum(sumVec);
+
+            for (int r = wtsVec.Length * Vector<float>.Count; r < wts.Length; r++)
+            {
+                var outGraSpan = outputGradients[r];
+                sum = wts[r] * outGraSpan + sum;
+                dts[r] = n * outGraSpan + dts[r];
+            }
+            inputGradients[l] = sum;
+        }
+
+        if (i != 0) // dirty! but seems faster without i == 0
+        {
+            if (outputGradients.Length < inputGradients.Length) 
+                outputGradients = stackalloc float[inputGradients.Length]; // faster but dirty? 
+            inputGradients.CopyTo(outputGradients); // overwrite used array
+        }
+    }  
+}
+~~~
+
 ## Cache Locality
+
+
 
 
 
