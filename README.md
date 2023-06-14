@@ -141,6 +141,10 @@ static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
 
 ## One Loop Backprop
 
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/one-loop.png?raw=true">
+</p>
+
 ~~~cs
 static void Backprop(Span<int> net, Span<float> weights, Span<float> neurons, Span<float> deltas, int target)
 {  
