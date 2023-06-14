@@ -117,6 +117,10 @@ This animation is not entirely accurate, as it explicitly shows the activation, 
 
 ## Backprop Probability Training
 
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/backprop_probability.png?raw=true">
+</p>
+
 ~~~cs
 static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
 {
