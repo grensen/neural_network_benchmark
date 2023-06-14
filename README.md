@@ -15,7 +15,7 @@ After conducting numerous benchmarks, the following result emerged: Training for
 
 ## [Neural Network Feature List](#neural-network-feature-list)
 
-- [Mini-batch Training](#mini-batch-training)
+- [Mini-Batch Training](#mini-batch-training)
 - [Stochastic Gradient Descent](#stochastic-gradient-descent)
 - [From Scratch Concept](#from-scratch-concept)
 - [Modern C# Optimization](#modern-c-optimization)
@@ -28,7 +28,7 @@ After conducting numerous benchmarks, the following result emerged: Training for
 - [Layer-wise Gradients](#layer-wise-gradients)
 - [Cache Locality](#cache-locality)
 
-## Mini-batch Training
+## Mini-Batch Training
 
 
 <p align="center">
