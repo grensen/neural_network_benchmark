@@ -151,7 +151,9 @@ static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
 
 ## Cache Locality
 
-
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/cache_locality.png?raw=true">
+</p>
 
 
 
