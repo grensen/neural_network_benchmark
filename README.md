@@ -145,9 +145,9 @@ static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
 
 ## Layer-wise Gradients
 
-~~~cs
-    Span<float> outputGradients = stackalloc float[net[^1]]; // right
-~~~
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/layer-wise-gradients.png?raw=true">
+</p>
 
 ## Cache Locality
 
