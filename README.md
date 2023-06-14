@@ -82,6 +82,10 @@ When it comes to modern C#, this article [Performance Improvements in .NET 7](ht
 
 ## Parallel Execution
 
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/multi-core.png?raw=true">
+</p>
+
 Parallel execution in that case means, that each available core in a CPU is assigned to calculate an example. However, this causes problems that only become apparent during parallel execution. The floating-point precision is not very accurate, which means that inaccuracies occur in the calculations, as can be seen in this [floating point issue example](https://github.com/grensen/multi-core#floating-point-issues) where discrepancies occur in about 10% of the calculations. Each time, the different executions lead to different delta values. If all are equally affected, the results remain the same. However, parallel execution tends to follow randomness, leading to the frustrating lack of reproducibility in our results. Techniques like weight decay can somewhat mitigate this effect, but the effect still exists, and perhaps more luck is involved in successful training than we would like. It remains an open challenge. However, 6 cores compute almost 6 times more than 1 core in my case. 
   
 ## SIMD Support
