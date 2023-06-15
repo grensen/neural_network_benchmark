@@ -82,6 +82,7 @@ However, if anyone believes that C# is outdated, I invite them to build the demo
   <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/nick_stephen.png?raw=true">
 </p>
 
+[Why is .NET so Insanely Fast? with Stephen Toub | Keep Coding Podcast #7](https://www.youtube.com/watch?v=Hxfu_KEa4uA) 
 When it comes to modern C#, this article [Performance Improvements in .NET 7](https://devblogs.microsoft.com/dotnet/performance_improvements_in_net_7/) by Stephen Toub is the first place to look. Perhaps the most relevant new feature are Span arrays, which are used everywhere in my code. Furthermore, there have been significant improvements in internal functions like Span1.CopyTo(Span2). 
 
 ## Parallel Execution
