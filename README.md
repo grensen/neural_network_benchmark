@@ -126,7 +126,7 @@ It gets a bit mystical when I keep the learning rate very low, then the activati
 ## Backprop Probability Training
 
 <p align="center">
-  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/backprop_probability.png?raw=true">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/backprop_probability.png" />
 </p>
 
 Looking back at the costs, the backprop process is the most expensive part of the computation with a cost of two. The idea is to take the softmax activation of the last output layer, which produces probabilities of 0-100% from our weighted sums. Then a probability check is performed to see if the activated output neuron of the target class is below the defined threshold, and only then is backprop executed. 
