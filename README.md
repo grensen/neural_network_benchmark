@@ -21,7 +21,7 @@ After conducting numerous benchmarks, the following result emerged: Training for
 - [Modern C# Optimization](#modern-c-optimization)
 - [Parallel Execution](#parallel-execution)
 - [SIMD Support](#simd-support)
-- [Layer-wise Propagation](#layer-wise-propagation)
+- [Layer-Wise Propagation](#layer-wise-propagation)
 - [ReLU Pre-activation](#relu-pre-activation)
 - [Backprop Probability Training](#backprop-probability-training)
 - [One Loop Backprop](#one-loop-backprop)
@@ -157,11 +157,51 @@ static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
   <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/one-loop.png?raw=true">
 </p>
 
-## Layer-wise Gradients
+One loop backprop means that we can take the output gradients and multiply them by the input neuron to get the deltas, and also multiply them by the weights to sum the input gradients. 
+This is only possible because we are computing the layer layer-wise, which means input to outputs, not perceptron-wise, where we compute inputs to output. 
+
+But there is also a drawback, because the input gradients are also computed, which are not needed in this implementation. So the code could be further optimized by unrolling the loop for the first layer input to hidden1. But then the code would be more and the input gradients on the first layer would be not ready for a CNN, so they will be computed as well. 
+
+## Layer-Wise Gradients
 
 <p align="center">
   <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/layer-wise-gradients.png?raw=true">
 </p>
+
+Understanding why one loop backprop works is important and not easy. In contrast to two loop backprop, which first computes all gradients and then all deltas, with one loop backprop we can save memory and make the network even faster by storing only the input and output gradients of each layer. 
+
+Only the code most important code parts:
+~~~cs
+    // caution - input gradients are computed! (for CNN e.g.)
+    Span<float> outputGradients = stackalloc float[net[^1]]; // right
+
+    // output error gradients, hard target as 1 for its class
+    for (int r = neurons.Length - net[^1], p = 0; r < neurons.Length; r++, p++)
+        outputGradients[p] = target == p ? 1 - neurons[r] : -neurons[r];
+
+    // compute gradients and deltas for each layer in one loop, hot!!!
+    for (int j = neurons.Length - net[^1], k = neurons.Length, m = weights.Length, i = net.Length - 2; i >= 0; i--)
+    {
+        int right = net[i + 1], left = net[i];
+        k -= right; j -= left; m -= right * left;
+
+        Span<float> inputGradients = stackalloc float[left];
+        for (int l = 0, w = m; l < inputGradients.Length; l++, w += right)
+        {
+            // backprop calculations
+        }
+
+        if (i != 0) // dirty! but seems faster without i == 0
+        {
+            if (outputGradients.Length < inputGradients.Length) 
+                outputGradients = stackalloc float[inputGradients.Length]; // faster but dirty? 
+            inputGradients.CopyTo(outputGradients); // overwrite used array
+        }
+    }  
+}
+~~~
+
+Note that after this optimization we no longer copy the input gradients for the first layer, which seems to be a bit faster. Also note, since feedforward and backprop can use the same forward pass for simplicity, the code remains as it is. But the input-output gradients idea can be used with the same trick for inference in production, since not all activated neurons need to be stored there.
 
 ## Cache Locality
 
