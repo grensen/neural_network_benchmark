@@ -83,6 +83,7 @@ However, if anyone believes that C# is outdated, I invite them to build the demo
 </p>
 
 [Why is .NET so Insanely Fast? with Stephen Toub | Keep Coding Podcast #7](https://www.youtube.com/watch?v=Hxfu_KEa4uA) 
+
 When it comes to modern C#, this article [Performance Improvements in .NET 7](https://devblogs.microsoft.com/dotnet/performance_improvements_in_net_7/) by Stephen Toub is the first place to look. Perhaps the most relevant new feature are Span arrays, which are used everywhere in my code. Furthermore, there have been significant improvements in internal functions like Span1.CopyTo(Span2). 
 
 ## Parallel Execution
@@ -116,11 +117,23 @@ This animation is not entirely accurate, as it explicitly shows the activation, 
   <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/relu.png?raw=true">
 </p>
 
+Pre-activation means that we take an input neuron and then use the general ReLU activation, we do this for every input neuron on every layer. This has the advantage of saving a lot of computation. The disadvantage is that this implementation cannot handle negative input neurons on the first layer, we would have to modify the code slightly for that.
+
+Let's go through how to evaluate the effect, starting with weights that are approximately 50% positive and 50% negative. Since the ReLU activation function allows only positive values, and the weights are connected to the input signals, the dot product, which can also be called the weighted sum, is likely to produce 50% activated neurons and 50% deactivated neurons. For example, from 784 * 100 = 78400 weights on the first layer, theoretically only half with 39200 weights will be computed. This of course continues on each layer. With training and competitive learning rates, the activation level decreases further depending on the strength of the learning rate. It is not uncommon for only 20% of ReLU activations to be active in trained networks. 
+
+It gets a bit mystical when I keep the learning rate very low, then the activation level can even go up to 100% if all neurons have enough activation possibilities to be trained. Crazy stuff!
+
 ## Backprop Probability Training
 
 <p align="center">
   <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/backprop_probability.png?raw=true">
 </p>
+
+Looking back at the costs, the backprop process is the most expensive part of the computation with a cost of two. The idea is to take the softmax activation of the last output layer, which produces probabilities of 0-100% from our weighted sums. Then a probability check is performed to see if the activated output neuron of the target class is below the defined threshold, and only then is backprop executed. 
+
+Assuming outputNeuron = 1 and target = 1, the calculation would look like this: outputNeuron - target = error = 0. An error of 0 means that we have nothing to learn here, since the difference between what we want and what comes out is zero. But even if the error is only 1%, it has not proven to be useful to tweak these examples any further, rather experience has shown that the generalization will continue to improve. 
+
+Backprop doesn't care about the error, it would just go through and cause a cost of 2 for every example we can already perfectly predict. In practice, however, after only one epoch, about 50% of the examples are predicted above the threshold. With one more line of code, the training time is practically halved from 4 to 2 seconds, so the probability threshold for backrop is an important feature. 
 
 ~~~cs
 static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
@@ -131,7 +144,7 @@ static bool Train(Span<float> sample, byte target, Net NN, float[] deltas)
 
     Softmax(neurons.Slice(neurons.Length - NN.net[^1], NN.net[^1]));
 
-    if (neurons[NN.neuronLen - NN.net[^1] + target] < 0.99)
+    if (neurons[NN.neuronLen - NN.net[^1] + target] < 0.99) // the magic line
         Backprop(NN.net, NN.weights, neurons, deltas, target);
 
     return prediction == target;
