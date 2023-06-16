@@ -209,6 +209,13 @@ Note that after this optimization we no longer copy the input gradients for the 
   <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/cache_locality.png?raw=true">
 </p>
 
+## Neural NetWork Benchmark in Java
+
+<p align="center">
+  <img src="https://github.com/grensen/neural_network_benchmark/blob/main/figures/benchmark_java.png?raw=true">
+</p>
+
+After a nice conversation about Java I was motivated to build a working demo, here is my first attempt without SIMD support, freaky fast Java.
 
 
 
